@@ -116,4 +116,68 @@ project(":zdd-mapper"){
         )
     }
 }
+project(":zdd-item-service"){
+    dependencies{
+        implementation(
+                "com.baomidou:mybatis-plus-extension:3.0.5",
+                project(':zdd-mapper'),
+                project(':zdd-entity')
+        )
+    }
+}
+project(":zdd-category-service"){
+    dependencies{
+        implementation(
+                "com.baomidou:mybatis-plus-extension:3.0.5",
+                project(':zdd-mapper'),
+                project(':zdd-entity')
+        )
+    }
+}
 
+project(":zdd-user-service"){
+    dependencies{
+        implementation(
+                "com.baomidou:mybatis-plus-extension:3.0.5",
+                project(':zdd-mapper'),
+                project(':zdd-entity')
+        )
+    }
+}
+project(":zdd-order-service"){
+    dependencies{
+        implementation(
+                "com.baomidou:mybatis-plus-extension:3.0.5",
+                project(':zdd-mapper'),
+                project(':zdd-entity')
+        )
+    }
+}
+project(":zdd-admin-service"){
+    dependencies{
+        implementation(
+                "com.baomidou:mybatis-plus-extension:3.0.5",
+                project(':zdd-mapper'),
+                project(':zdd-entity')
+        )
+    }
+}
+project(":zdd-web"){
+    dependencies{
+        implementation(
+                'org.springframework.boot:spring-boot-starter-web',
+                project(':zdd-user-service'),
+                project(':zdd-item-service'),
+                project(':zdd-order-service'),
+                project(':zdd-category-service')
+        )
+    }
+}
+project(":zdd-admin-web"){
+    dependencies{
+        implementation(
+                'org.springframework.boot:spring-boot-starter-web',
+                project(':zdd-admin-service')
+        )
+    }
+}
