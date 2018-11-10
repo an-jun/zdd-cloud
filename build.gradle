@@ -1,16 +1,119 @@
-plugins {
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.1.0.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+//        maven { url 'http://repository.jboss.org/nexus/content/groups/public' }
+//        maven { url 'http://mirrors.ibiblio.org/pub/mirrors/maven2/' }
+        mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
-
+//configure(allprojects) { project ->
+//    apply plugin: 'org.springframework.boot'
+//
+//    dependencies {
+//        compile(
+//                'org.csource:fastdfs-client-java:1.27-SNAPSHOT',
+//                'org.projectlombok:lombok:1.18.4',
+//                'com.alibaba:fastjson:1.2.51'
+//        )
+//        implementation('org.springframework.boot:spring-boot-starter')
+//        testImplementation('org.springframework.boot:spring-boot-starter-test')
+//    }
+//}
 group 'anjun'
 version '1.0'
+//sourceCompatibility = 1.8
+subprojects {
+    ext {
+        springCloudVersion = 'Finchley.RELEASE'
+        springBootVersion = '2.1.0.RELEASE'
+    }
 
-sourceCompatibility = 1.8
+    apply plugin: "java"
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "org.springframework.boot"
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenLocal()
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+//        maven { url 'http://repository.jboss.org/nexus/content/groups/public' }
+//        maven { url 'http://mirrors.ibiblio.org/pub/mirrors/maven2/' }
+        mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
+        jcenter()
+    }
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+//    dependencyManagement {
+//        imports {
+////            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+//            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//        }
+//    }
+
+//    dependencies {
+//        compile("org.springframework.boot:spring-boot-starter-web",
+//                "org.springframework.boot:spring-boot-starter-actuator",
+//                "org.springframework.cloud:spring-cloud-starter-eureka-server",
+//                "org.springframework.cloud:spring-cloud-starter-consul-discovery"
+//        )
+//    }
+    dependencies{
+        implementation(
+               "org.springframework.boot:spring-boot-starter",
+                "org.projectlombok:lombok"
+        )
+    }
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+project(":zdd-eureka") {
+//    dependencies {
+//        compile("org.springframework.cloud:spring-cloud-starter-eureka-server")
+//    }
+    dependencies {
+        implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server')
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
+    }
 }
+project(":zdd-config") {
+
+    dependencies {
+        implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
+                "org.springframework.cloud:spring-cloud-config-server",
+//                "org.springframework.cloud:spring-cloud-starter-config"
+        )
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
+    }
+}
+project(":zdd-entity"){
+    dependencies{
+        implementation(
+                "com.baomidou:mybatis-plus:3.0.5"
+        )
+    }
+}
+project(":zdd-mapper"){
+    dependencies{
+        implementation(
+                "mysql:mysql-connector-java",
+                "com.baomidou:mybatis-plus:3.0.5",
+                'org.freemarker:freemarker:2.3.28',
+                project(':zdd-entity')
+        )
+    }
+}
+
