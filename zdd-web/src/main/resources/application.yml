@@ -1,2 +1,23 @@
 server:
   port: 8000
+spring:
+  application:
+    name: zdd-web
+  main:
+    allow-bean-definition-overriding: true
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+eureka:
+  instance:
+    hostname: localhost  #eureka客户端主机实例名称
+    appname: zdd-web  #客户端服务名
+    instance-id: zdd-web:8000 #客户端实例名称
+    prefer-ip-address: true #显示IP
+  client:
+    service-url:
+      defaultZone: http://localhost:8101/eureka   #把服务注册到eureka注册中心

@@ -55,6 +55,7 @@ public class CodeGenerator {
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("anjun");
         gc.setOpen(false);
+
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -105,7 +106,7 @@ public class CodeGenerator {
         strategy.setInclude(table);
         strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
+        strategy.setTablePrefix("t_");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();

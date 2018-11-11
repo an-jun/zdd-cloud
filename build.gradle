@@ -15,19 +15,7 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
-//configure(allprojects) { project ->
-//    apply plugin: 'org.springframework.boot'
-//
-//    dependencies {
-//        compile(
-//                'org.csource:fastdfs-client-java:1.27-SNAPSHOT',
-//                'org.projectlombok:lombok:1.18.4',
-//                'com.alibaba:fastjson:1.2.51'
-//        )
-//        implementation('org.springframework.boot:spring-boot-starter')
-//        testImplementation('org.springframework.boot:spring-boot-starter-test')
-//    }
-//}
+
 group 'anjun'
 version '1.0'
 //sourceCompatibility = 1.8
@@ -35,6 +23,7 @@ subprojects {
     ext {
         springCloudVersion = 'Finchley.RELEASE'
         springBootVersion = '2.1.0.RELEASE'
+        junitVersion = '4.12'
     }
 
     apply plugin: "java"
@@ -57,32 +46,45 @@ subprojects {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
     }
-//    dependencyManagement {
-//        imports {
-////            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-//            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-//        }
-//    }
 
-//    dependencies {
-//        compile("org.springframework.boot:spring-boot-starter-web",
-//                "org.springframework.boot:spring-boot-starter-actuator",
-//                "org.springframework.cloud:spring-cloud-starter-eureka-server",
-//                "org.springframework.cloud:spring-cloud-starter-consul-discovery"
-//        )
-//    }
-    dependencies{
+    dependencies {
         implementation(
-               "org.springframework.boot:spring-boot-starter",
-                "org.projectlombok:lombok"
+                "org.springframework.boot:spring-boot-starter",
+
         )
+        compile(project(':zdd-entity')) {
+            transitive = false
+        }
+
+        compileOnly("org.projectlombok:lombok")
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
+    }
+    if (name.contains("-service") || name.contains("-web")) {
+        dependencies {
+            implementation(
+                    'org.springframework.boot:spring-boot-starter-web',
+                    'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+            )
+        }
+
+    }
+    if(name.contains("-service")){
+        dependencies{
+            implementation(
+                    "mysql:mysql-connector-java"
+            )
+        }
+    }
+    if(name.contains("-web")){
+        dependencies{
+            implementation(
+                    'org.springframework.cloud:spring-cloud-starter-openfeign'
+            )
+        }
     }
 }
 
 project(":zdd-eureka") {
-//    dependencies {
-//        compile("org.springframework.cloud:spring-cloud-starter-eureka-server")
-//    }
     dependencies {
         implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server')
         testImplementation('org.springframework.boot:spring-boot-starter-test')
@@ -96,88 +98,85 @@ project(":zdd-config") {
 //                "org.springframework.cloud:spring-cloud-starter-config"
         )
 
-        testImplementation('org.springframework.boot:spring-boot-starter-test')
     }
 }
-project(":zdd-entity"){
-    dependencies{
+project(":zdd-entity") {
+    dependencies {
         implementation(
-                "com.baomidou:mybatis-plus:3.0.5"
+                'com.baomidou:mybatis-plus-boot-starter:3.0.5',
         )
     }
 }
-project(":zdd-mapper"){
-    dependencies{
+
+project(":zdd-mapper") {
+    dependencies {
         implementation(
                 "mysql:mysql-connector-java",
-                "com.baomidou:mybatis-plus:3.0.5",
+                'com.baomidou:mybatis-plus-boot-starter:3.0.5',
                 'org.freemarker:freemarker:2.3.28',
+                'com.alibaba:druid:1.1.12',
                 project(':zdd-entity')
         )
     }
 }
-project(":zdd-item-service"){
-    dependencies{
+project(":zdd-item-service") {
+    dependencies {
         implementation(
-                "com.baomidou:mybatis-plus-extension:3.0.5",
-                project(':zdd-mapper'),
-                project(':zdd-entity')
+                'com.baomidou:mybatis-plus-boot-starter:3.0.5',
+                project(':zdd-mapper')
         )
     }
 }
-project(":zdd-category-service"){
-    dependencies{
+project(":zdd-category-service") {
+    dependencies {
         implementation(
-                "com.baomidou:mybatis-plus-extension:3.0.5",
+                'com.baomidou:mybatis-plus-boot-starter:3.0.5',
                 project(':zdd-mapper'),
                 project(':zdd-entity')
         )
     }
 }
 
-project(":zdd-user-service"){
-    dependencies{
+project(":zdd-user-service") {
+    dependencies {
         implementation(
-                "com.baomidou:mybatis-plus-extension:3.0.5",
+                'com.baomidou:mybatis-plus-boot-starter:3.0.5',
                 project(':zdd-mapper'),
                 project(':zdd-entity')
         )
     }
 }
-project(":zdd-order-service"){
-    dependencies{
+project(":zdd-order-service") {
+    dependencies {
         implementation(
-                "com.baomidou:mybatis-plus-extension:3.0.5",
+                'com.baomidou:mybatis-plus-boot-starter:3.0.5',
                 project(':zdd-mapper'),
                 project(':zdd-entity')
         )
     }
 }
-project(":zdd-admin-service"){
-    dependencies{
+project(":zdd-admin-service") {
+    dependencies {
         implementation(
-                "com.baomidou:mybatis-plus-extension:3.0.5",
+                'com.baomidou:mybatis-plus-boot-starter:3.0.5',
                 project(':zdd-mapper'),
                 project(':zdd-entity')
         )
     }
 }
-project(":zdd-web"){
-    dependencies{
-        implementation(
-                'org.springframework.boot:spring-boot-starter-web',
-                project(':zdd-user-service'),
-                project(':zdd-item-service'),
-                project(':zdd-order-service'),
-                project(':zdd-category-service')
-        )
-    }
-}
-project(":zdd-admin-web"){
-    dependencies{
-        implementation(
-                'org.springframework.boot:spring-boot-starter-web',
-                project(':zdd-admin-service')
-        )
-    }
-}
+//project(":zdd-web") {
+//    dependencies {
+//        implementation(
+//                'org.springframework.cloud:spring-cloud-starter-openfeign',
+//
+//        )
+//    }
+//}
+//project(":zdd-admin-web") {
+//    dependencies {
+//        implementation(
+//                'org.springframework.cloud:spring-cloud-starter-openfeign',
+//
+//        )
+//    }
+//}
