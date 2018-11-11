@@ -63,20 +63,21 @@ subprojects {
         dependencies {
             implementation(
                     'org.springframework.boot:spring-boot-starter-web',
-                    'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+                    'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
+                    project(":zdd-common")
             )
         }
 
     }
-    if(name.contains("-service")){
-        dependencies{
+    if (name.contains("-service")) {
+        dependencies {
             implementation(
                     "mysql:mysql-connector-java"
             )
         }
     }
-    if(name.contains("-web")){
-        dependencies{
+    if (name.contains("-web")) {
+        dependencies {
             implementation(
                     'org.springframework.cloud:spring-cloud-starter-openfeign'
             )
